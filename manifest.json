@@ -2,29 +2,42 @@
   "name": "FixIt AI",
   "short_name": "FixIt AI",
   "description": "AI-powered troubleshooting assistant that helps identify problems, explain possible causes, and provide safe step-by-step repair guidance.",
-  "id": "https://debabratapatel221-ai.github.io/Fixit-AI/",
-  "start_url": "https://debabratapatel221-ai.github.io/Fixit-AI/",
-  "scope": "https://debabratapatel221-ai.github.io/Fixit-AI/",
+
+  "id": "/Fixit-AI/",
+  "start_url": "/Fixit-AI/",
+  "scope": "/Fixit-AI/",
+
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+
   "background_color": "#f4f7fb",
   "theme_color": "#5b5bd6",
+
   "orientation": "portrait-primary",
+
   "lang": "en",
   "dir": "ltr",
+
   "categories": [
     "utilities",
     "productivity",
     "lifestyle"
   ],
+
+  "prefer_related_applications": false,
+
   "icons": [
     {
-      "src": "https://debabratapatel221-ai.github.io/Fixit-AI/icon-192.png",
+      "src": "/Fixit-AI/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "https://debabratapatel221-ai.github.io/Fixit-AI/icon-512.png",
+      "src": "/Fixit-AI/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
