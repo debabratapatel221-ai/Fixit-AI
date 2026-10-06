@@ -1,1695 +1,2344 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>FixIt AI</title>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-:root{
-    --bg:#f4f7fb;
-    --card:#ffffff;
-    --text:#172033;
-    --muted:#6b7280;
-    --border:#e5e7eb;
-    --primary:#5b5bd6;
-    --primary-dark:#4545b8;
-    --danger:#dc2626;
-    --warning:#d97706;
-    --success:#15803d;
-    --shadow:0 10px 30px rgba(20,30,60,.08);
-}
-
-body.dark{
-    --bg:#0d1117;
-    --card:#161b22;
-    --text:#f3f4f6;
-    --muted:#9ca3af;
-    --border:#30363d;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
-}
-
-body{
-    font-family:Inter,Segoe UI,Arial,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    transition:.25s;
-}
-
-button,input,textarea,select{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-/* ================= HEADER ================= */
-
-header{
-    position:sticky;
-    top:0;
-    z-index:50;
-    background:var(--card);
-    border-bottom:1px solid var(--border);
-    backdrop-filter:blur(15px);
-}
-
-.nav{
-    max-width:1250px;
-    margin:auto;
-    padding:16px 20px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:20px;
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:800;
-    font-size:21px;
-}
-
-.logo-icon{
-    width:40px;
-    height:40px;
-    border-radius:12px;
-    background:var(--primary);
-    color:white;
-    display:grid;
-    place-items:center;
-    font-size:20px;
-}
-
-.nav-actions{
-    display:flex;
-    gap:8px;
-}
-
-.icon-btn{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    border:1px solid var(--border);
-    background:var(--card);
-    color:var(--text);
-}
-
-/* ================= MAIN ================= */
-
-.container{
-    max-width:1250px;
-    margin:auto;
-    padding:32px 20px 70px;
-}
-
-.hero{
-    text-align:center;
-    max-width:800px;
-    margin:20px auto 40px;
-}
-
-.hero h1{
-    font-size:clamp(34px,6vw,62px);
-    line-height:1.02;
-    letter-spacing:-2px;
-    margin-bottom:16px;
-}
-
-.gradient{
-    background:linear-gradient(90deg,#5b5bd6,#8b5cf6,#ec4899);
-    -webkit-background-clip:text;
-    color:transparent;
-}
-
-.hero p{
-    color:var(--muted);
-    font-size:18px;
-    line-height:1.6;
-}
-
-/* ================= DASHBOARD ================= */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.stat{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:20px;
-    box-shadow:var(--shadow);
-}
-
-.stat small{
-    color:var(--muted);
-}
-
-.stat strong{
-    display:block;
-    font-size:30px;
-    margin-top:7px;
-}
-
-/* ================= ANALYZER ================= */
-
-.analyzer{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:22px;
-}
-
-.card{
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:22px;
-    padding:24px;
-    box-shadow:var(--shadow);
-}
-
-.card h2{
-    margin-bottom:8px;
-}
-
-.subtitle{
-    color:var(--muted);
-    line-height:1.5;
-    margin-bottom:20px;
-}
-
-.upload{
-    border:2px dashed var(--border);
-    border-radius:18px;
-    min-height:280px;
-    display:grid;
-    place-items:center;
-    text-align:center;
-    padding:20px;
-    transition:.2s;
-}
-
-.upload.drag{
-    border-color:var(--primary);
-    background:rgba(91,91,214,.07);
-}
-
-.upload-preview{
-    max-width:100%;
-    max-height:300px;
-    border-radius:14px;
-    display:none;
-}
-
-.upload-content{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
-}
-
-.big-camera{
-    width:65px;
-    height:65px;
-    border-radius:20px;
-    display:grid;
-    place-items:center;
-    background:rgba(91,91,214,.12);
-    font-size:30px;
-}
-
-.primary{
-    background:var(--primary);
-    color:white;
-    border:0;
-    padding:13px 19px;
-    border-radius:12px;
-    font-weight:700;
-}
-
-.primary:hover{
-    background:var(--primary-dark);
-}
-
-.secondary{
-    background:transparent;
-    color:var(--text);
-    border:1px solid var(--border);
-    padding:12px 17px;
-    border-radius:12px;
-    font-weight:600;
-}
-
-textarea,
-select,
-input[type="text"]{
-    width:100%;
-    border:1px solid var(--border);
-    background:var(--bg);
-    color:var(--text);
-    padding:13px;
-    border-radius:12px;
-    outline:none;
-}
-
-textarea{
-    min-height:120px;
-    resize:vertical;
-}
-
-textarea:focus,
-select:focus,
-input:focus{
-    border-color:var(--primary);
-}
-
-.field{
-    margin-top:18px;
-}
-
-.field label{
-    display:block;
-    font-weight:650;
-    margin-bottom:8px;
-}
-
-.analyze-btn{
-    width:100%;
-    margin-top:20px;
-    padding:15px;
-    font-size:16px;
-}
-
-/* ================= RESULTS ================= */
-
-.results{
-    margin-top:25px;
-    display:none;
-}
-
-.results.show{
-    display:block;
-}
-
-.result-header{
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
-    align-items:flex-start;
-    flex-wrap:wrap;
-}
-
-.badge{
-    padding:7px 11px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:700;
-}
-
-.badge.green{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.badge.yellow{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.badge.red{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.result-grid{
-    display:grid;
-    grid-template-columns:1.2fr .8fr;
-    gap:20px;
-    margin-top:20px;
-}
-
-.info-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:12px;
-    margin-top:20px;
-}
-
-.info{
-    padding:15px;
-    border:1px solid var(--border);
-    border-radius:14px;
-}
-
-.info small{
-    color:var(--muted);
-    display:block;
-    margin-bottom:5px;
-}
-
-.steps{
-    list-style:none;
-    margin-top:20px;
-}
-
-.steps li{
-    display:flex;
-    gap:12px;
-    padding:15px 0;
-    border-bottom:1px solid var(--border);
-    line-height:1.5;
-}
-
-.step-number{
-    min-width:30px;
-    height:30px;
-    border-radius:50%;
-    background:var(--primary);
-    color:white;
-    display:grid;
-    place-items:center;
-    font-size:13px;
-    font-weight:bold;
-}
-
-.tools{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:15px;
-}
-
-.tool{
-    border:1px solid var(--border);
-    padding:8px 11px;
-    border-radius:999px;
-    font-size:13px;
-}
-
-.warning{
-    margin-top:20px;
-    padding:16px;
-    border-radius:14px;
-    background:#fff7ed;
-    border:1px solid #fed7aa;
-    color:#9a3412;
-    line-height:1.5;
-}
-
-body.dark .warning{
-    background:#2a1b0e;
-    color:#fdba74;
-    border-color:#633c1b;
-}
-
-/* ================= HISTORY ================= */
-
-.history{
-    margin-top:30px;
-}
-
-.history-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    margin-bottom:18px;
-}
-
-.history-list{
-    display:grid;
-    gap:10px;
-}
-
-.history-item{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:15px;
-    padding:15px;
-    border:1px solid var(--border);
-    border-radius:14px;
-}
-
-.history-item small{
-    color:var(--muted);
-}
-
-.empty{
-    text-align:center;
-    color:var(--muted);
-    padding:35px;
-    border:1px dashed var(--border);
-    border-radius:15px;
-}
-
-/* ================= LOADING ================= */
-
-.loading{
-    display:none;
-    text-align:center;
-    padding:25px;
-}
-
-.loading.show{
-    display:block;
-}
-
-.spinner{
-    width:40px;
-    height:40px;
-    margin:auto auto 12px;
-    border:4px solid var(--border);
-    border-top-color:var(--primary);
-    border-radius:50%;
-    animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg)}
-}
-
-/* ================= TOAST ================= */
-
-.toast{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    padding:14px 17px;
-    background:#111827;
-    color:white;
-    border-radius:12px;
-    transform:translateY(100px);
-    opacity:0;
-    transition:.3s;
-    z-index:100;
-}
-
-.toast.show{
-    transform:translateY(0);
-    opacity:1;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:850px){
-    .stats{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .analyzer,
-    .result-grid{
-        grid-template-columns:1fr;
-    }
-}
-
-@media(max-width:550px){
-    .container{
-        padding:22px 14px 50px;
-    }
-
-    .stats{
-        grid-template-columns:1fr 1fr;
-        gap:10px;
-    }
-
-    .stat{
-        padding:15px;
-    }
-
-    .stat strong{
-        font-size:24px;
-    }
-
-    .card{
-        padding:17px;
-        border-radius:17px;
-    }
-
-    .info-grid{
-        grid-template-columns:1fr;
-    }
-
-    .hero h1{
-        letter-spacing:-1px;
-    }
-}
-</style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="FixIt AI helps identify problems and provides safe step-by-step troubleshooting and repair guidance."
+    >
+
+    <meta
+        name="theme-color"
+        content="#5b5bd6"
+    >
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default"
+    >
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="FixIt AI"
+    >
+
+    <title>FixIt AI — Smart Troubleshooting Assistant</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- App Icon -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary: #5b5bd6;
+            --primary-dark: #4444b8;
+            --primary-light: #eeeeff;
+            --background: #f4f7fb;
+            --card: #ffffff;
+            --text: #171725;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --success: #16a34a;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --radius: 18px;
+        }
+
+        body.dark {
+            --background: #11121a;
+            --card: #1c1e2a;
+            --text: #f5f5f7;
+            --muted: #a1a1aa;
+            --border: #303241;
+            --primary-light: #27274d;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        body {
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        button,
+        input,
+        textarea,
+        select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+        }
+
+        .header-inner {
+            width: min(1180px, 94%);
+            margin: auto;
+
+            min-height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+
+            border-radius: 14px;
+
+            background: var(--primary);
+
+            display: grid;
+            place-items: center;
+
+            color: white;
+            font-size: 23px;
+
+            box-shadow:
+                0 7px 18px rgba(91, 91, 214, 0.28);
+        }
+
+        .brand h1 {
+            font-size: 21px;
+            line-height: 1.1;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-button {
+            width: 42px;
+            height: 42px;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            background: var(--card);
+            color: var(--text);
+
+            display: grid;
+            place-items: center;
+
+            font-size: 18px;
+        }
+
+        .icon-button:hover {
+            background: var(--primary-light);
+        }
+
+        /* =========================
+           LAYOUT
+        ========================== */
+
+        .container {
+            width: min(1180px, 94%);
+            margin: 0 auto;
+            padding: 30px 0 60px;
+        }
+
+        .hero {
+            margin-bottom: 26px;
+        }
+
+        .hero h2 {
+            font-size: clamp(28px, 5vw, 46px);
+            line-height: 1.05;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+        }
+
+        .hero h2 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 720px;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.35fr 0.65fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        /* =========================
+           CARD
+        ========================== */
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+        }
+
+        .card + .card {
+            margin-top: 18px;
+        }
+
+        .card-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .card-title h3 {
+            font-size: 18px;
+        }
+
+        .card-title span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+           UPLOAD
+        ========================== */
+
+        .upload-box {
+            border: 2px dashed var(--border);
+            border-radius: 16px;
+            padding: 34px 20px;
+            text-align: center;
+            transition: 0.2s ease;
+            background: var(--background);
+        }
+
+        .upload-box:hover,
+        .upload-box.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .upload-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 18px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: grid;
+            place-items: center;
+            margin: 0 auto 15px;
+            font-size: 27px;
+        }
+
+        .upload-box h4 {
+            margin-bottom: 7px;
+            font-size: 17px;
+        }
+
+        .upload-box p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .upload-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            background: var(--primary);
+            color: white;
+
+            border: none;
+            border-radius: 11px;
+
+            padding: 11px 17px;
+
+            font-weight: 700;
+        }
+
+        .upload-button:hover {
+            background: var(--primary-dark);
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .image-preview {
+            display: none;
+            margin-top: 18px;
+            position: relative;
+        }
+
+        .image-preview img {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 14px;
+            background: #000;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+
+            width: 36px;
+            height: 36px;
+
+            border: none;
+            border-radius: 50%;
+
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+
+            font-size: 18px;
+        }
+
+        /* =========================
+           FORM
+        ========================== */
+
+        .form-group {
+            margin-top: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+
+            border: 1px solid var(--border);
+            border-radius: 12px;
+
+            background: var(--card);
+            color: var(--text);
+
+            padding: 12px 14px;
+
+            outline: none;
+
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(91, 91, 214, 0.12);
+        }
+
+        textarea.form-control {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .category {
+            border: 1px solid var(--border);
+            border-radius: 13px;
+
+            background: var(--card);
+            color: var(--text);
+
+            padding: 13px 8px;
+
+            text-align: center;
+
+            transition: 0.2s ease;
+        }
+
+        .category:hover {
+            border-color: var(--primary);
+        }
+
+        .category.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .category-icon {
+            display: block;
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+        .category-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           ANALYZE BUTTON
+        ========================== */
+
+        .analyze-button {
+            width: 100%;
+
+            margin-top: 22px;
+
+            padding: 15px;
+
+            border: none;
+            border-radius: 13px;
+
+            background: var(--primary);
+            color: white;
+
+            font-weight: 800;
+            font-size: 16px;
+
+            box-shadow:
+                0 10px 22px rgba(91, 91, 214, 0.25);
+
+            transition: 0.2s ease;
+        }
+
+        .analyze-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .analyze-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .stat {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 15px;
+            background: var(--background);
+        }
+
+        .stat-number {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        .tip {
+            border-left: 4px solid var(--primary);
+            background: var(--primary-light);
+            padding: 14px;
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           RESULTS
+        ========================== */
+
+        #results {
+            display: none;
+            margin-top: 22px;
+        }
+
+        .result-header {
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #7474e8
+            );
+
+            color: white;
+
+            border-radius: 16px;
+            padding: 22px;
+
+            margin-bottom: 18px;
+        }
+
+        .result-header small {
+            opacity: 0.8;
+        }
+
+        .result-header h3 {
+            font-size: 24px;
+            margin-top: 5px;
+        }
+
+        .result-summary {
+            margin-top: 9px;
+            opacity: 0.92;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .result-section {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 17px;
+            background: var(--background);
+        }
+
+        .result-section.full {
+            grid-column: 1 / -1;
+        }
+
+        .result-section h4 {
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .steps {
+            counter-reset: step;
+            list-style: none;
+        }
+
+        .steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 39px;
+            margin-bottom: 13px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .steps li::before {
+            content: counter(step);
+
+            position: absolute;
+            left: 0;
+            top: 0;
+
+            width: 27px;
+            height: 27px;
+
+            border-radius: 50%;
+
+            background: var(--primary);
+            color: white;
+
+            display: grid;
+            place-items: center;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tool {
+            padding: 7px 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .risk {
+            border-left: 4px solid var(--danger);
+            background: rgba(220, 38, 38, 0.08);
+            padding: 13px;
+            border-radius: 10px;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+
+        .result-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .meta-item {
+            padding: 12px;
+            border-radius: 11px;
+            background: var(--card);
+            border: 1px solid var(--border);
+        }
+
+        .meta-item small {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 4px;
+        }
+
+        .meta-item strong {
+            font-size: 14px;
+        }
+
+        /* =========================
+           HISTORY
+        ========================== */
+
+        .history-item {
+            padding: 13px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .history-item span {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .empty {
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .clear-button {
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 9px;
+            padding: 7px 10px;
+            font-size: 11px;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 22px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+
+            margin: auto auto 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            text-align: center;
+            padding: 30px 15px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 850px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 92%;
+                padding-top: 22px;
+            }
+
+            .header-inner {
+                min-height: 64px;
+            }
+
+            .brand p {
+                display: none;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-section.full {
+                grid-column: auto;
+            }
+
+            .result-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h2 {
+                font-size: 34px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-    <nav class="nav">
+    <div class="header-inner">
 
-        <div class="logo">
-            <div class="logo-icon">🔧</div>
-            FixIt AI
+        <div class="brand">
+
+            <div class="brand-icon">
+                🔧
+            </div>
+
+            <div>
+                <h1>FixIt AI</h1>
+                <p>Smart Troubleshooting Assistant</p>
+            </div>
+
         </div>
 
-        <div class="nav-actions">
-            <button class="icon-btn" id="darkBtn" title="Toggle dark mode">
+        <div class="header-actions">
+
+            <button
+                class="icon-button"
+                id="installButton"
+                title="Install FixIt AI"
+                style="display:none;"
+            >
+                📲
+            </button>
+
+            <button
+                class="icon-button"
+                id="themeButton"
+                title="Toggle dark mode"
+            >
                 🌙
             </button>
+
         </div>
 
-    </nav>
+    </div>
 </header>
+
 
 <main class="container">
 
-<section class="hero">
+    <section class="hero">
 
-    <h1>
-        Fix things smarter with
-        <span class="gradient">AI.</span>
-    </h1>
+        <h2>
+            Fix problems with
+            <span>FixIt AI.</span>
+        </h2>
 
-    <p>
-        Show FixIt AI what's wrong. Describe the problem.
-        Get structured troubleshooting guidance, tools,
-        estimated cost and safety recommendations.
-    </p>
-
-</section>
-
-
-<section class="stats">
-
-    <div class="stat">
-        <small>Repairs analyzed</small>
-        <strong id="totalRepairs">0</strong>
-    </div>
-
-    <div class="stat">
-        <small>Saved repairs</small>
-        <strong id="savedRepairs">0</strong>
-    </div>
-
-    <div class="stat">
-        <small>Categories</small>
-        <strong id="categories">0</strong>
-    </div>
-
-    <div class="stat">
-        <small>Current status</small>
-        <strong style="font-size:18px">Ready</strong>
-    </div>
-
-</section>
-
-
-<section class="analyzer">
-
-    <!-- IMAGE -->
-
-    <div class="card">
-
-        <h2>📷 Show the problem</h2>
-
-        <p class="subtitle">
-            Upload a clear photo of the object or problem area.
+        <p>
+            Describe your problem, upload a photo, and get
+            practical troubleshooting guidance, possible causes,
+            required tools, estimated cost, and safety advice.
         </p>
 
-        <div class="upload" id="dropZone">
+    </section>
 
-            <img id="preview" class="upload-preview">
 
-            <div class="upload-content" id="uploadContent">
+    <div class="grid">
 
-                <div class="big-camera">
-                    📷
+        <!-- MAIN COLUMN -->
+
+        <section>
+
+            <div class="card">
+
+                <div class="card-title">
+                    <div>
+                        <h3>🔍 Diagnose a Problem</h3>
+                        <span>Tell us what's wrong</span>
+                    </div>
                 </div>
 
-                <strong>Drop an image here</strong>
 
-                <span class="subtitle">
-                    or choose an image from your device
-                </span>
+                <!-- IMAGE UPLOAD -->
 
-                <button class="primary" id="chooseBtn">
-                    Choose Image
+                <div
+                    class="upload-box"
+                    id="uploadBox"
+                >
+
+                    <div class="upload-icon">
+                        📷
+                    </div>
+
+                    <h4>
+                        Upload a photo
+                    </h4>
+
+                    <p>
+                        Drag & drop an image here or choose one
+                    </p>
+
+                    <label
+                        for="imageInput"
+                        class="upload-button"
+                    >
+                        📁 Choose Image
+                    </label>
+
+                    <input
+                        type="file"
+                        id="imageInput"
+                        accept="image/*"
+                    >
+
+                </div>
+
+
+                <div
+                    class="image-preview"
+                    id="imagePreview"
+                >
+
+                    <img
+                        id="previewImage"
+                        alt="Uploaded problem"
+                    >
+
+                    <button
+                        class="remove-image"
+                        id="removeImage"
+                        title="Remove image"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    <label>
+                        What type of problem is this?
+                    </label>
+
+                    <div class="category-grid">
+
+                        <button
+                            class="category"
+                            data-category="electrical"
+                        >
+                            <span class="category-icon">⚡</span>
+                            <span class="category-name">
+                                Electrical
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="plumbing"
+                        >
+                            <span class="category-icon">🚰</span>
+                            <span class="category-name">
+                                Plumbing
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="appliance"
+                        >
+                            <span class="category-icon">🔌</span>
+                            <span class="category-name">
+                                Appliance
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="vehicle"
+                        >
+                            <span class="category-icon">🚗</span>
+                            <span class="category-name">
+                                Vehicle
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="computer"
+                        >
+                            <span class="category-icon">💻</span>
+                            <span class="category-name">
+                                Computer
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="furniture"
+                        >
+                            <span class="category-icon">🪑</span>
+                            <span class="category-name">
+                                Furniture
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="home"
+                        >
+                            <span class="category-icon">🏠</span>
+                            <span class="category-name">
+                                Home
+                            </span>
+                        </button>
+
+                        <button
+                            class="category"
+                            data-category="other"
+                        >
+                            <span class="category-icon">🛠️</span>
+                            <span class="category-name">
+                                Other
+                            </span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="problem">
+                        Describe the problem
+                    </label>
+
+                    <textarea
+                        id="problem"
+                        class="form-control"
+                        placeholder="Example: My ceiling fan is running slowly and making a humming noise..."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    class="analyze-button"
+                    id="analyzeButton"
+                >
+                    🔎 Analyze Problem
                 </button>
 
-            </div>
 
-        </div>
+                <div
+                    class="loading"
+                    id="loading"
+                >
 
-        <input
-            type="file"
-            id="imageInput"
-            accept="image/*"
-            hidden
-        >
+                    <div class="spinner"></div>
 
-    </div>
+                    <strong>
+                        FixIt AI is analyzing...
+                    </strong>
 
+                    <p style="color:var(--muted);margin-top:6px;font-size:13px;">
+                        Checking possible causes and repair steps
+                    </p>
 
-    <!-- DESCRIPTION -->
-
-    <div class="card">
-
-        <h2>🧠 Describe the problem</h2>
-
-        <p class="subtitle">
-            The more information you provide, the better the analysis.
-        </p>
-
-        <div class="field">
-
-            <label>What are you trying to fix?</label>
-
-            <select id="category">
-
-                <option value="">Select category</option>
-
-                <option value="electrical">Electrical</option>
-                <option value="plumbing">Plumbing</option>
-                <option value="appliance">Home Appliance</option>
-                <option value="vehicle">Vehicle</option>
-                <option value="computer">Computer / Electronics</option>
-                <option value="furniture">Furniture</option>
-                <option value="other">Other</option>
-
-            </select>
-
-        </div>
-
-
-        <div class="field">
-
-            <label>What is happening?</label>
-
-            <textarea
-                id="description"
-                placeholder="Example: The ceiling fan is rotating slowly and making a humming noise..."
-            ></textarea>
-
-        </div>
-
-
-        <button class="primary analyze-btn" id="analyzeBtn">
-
-            ✨ Analyze Problem
-
-        </button>
-
-    </div>
-
-</section>
-
-
-<div class="loading" id="loading">
-
-    <div class="spinner"></div>
-
-    <strong>Analyzing the problem...</strong>
-
-    <p class="subtitle">
-        Building a troubleshooting plan
-    </p>
-
-</div>
-
-
-<section class="results" id="results">
-
-    <div class="card">
-
-        <div class="result-header">
-
-            <div>
-
-                <span class="badge green" id="resultBadge">
-                    ANALYSIS READY
-                </span>
-
-                <h2 id="resultTitle" style="margin-top:10px">
-                    Possible issue detected
-                </h2>
-
-                <p class="subtitle" id="resultSummary">
-                </p>
+                </div>
 
             </div>
 
-            <button
-                class="secondary"
-                id="saveBtn"
+
+            <!-- RESULTS -->
+
+            <div
+                class="card"
+                id="results"
             >
-                💾 Save Repair
-            </button>
 
-        </div>
+                <div class="result-header">
+
+                    <small>
+                        ANALYSIS RESULT
+                    </small>
+
+                    <h3 id="resultTitle">
+                        Possible Issue
+                    </h3>
+
+                    <p
+                        class="result-summary"
+                        id="resultSummary"
+                    ></p>
+
+                </div>
 
 
-        <div class="result-grid">
+                <div class="result-grid">
 
-            <div>
+                    <div class="result-section full">
 
-                <h3>🛠️ Recommended steps</h3>
+                        <h4>
+                            🛠️ Recommended Steps
+                        </h4>
 
-                <ol class="steps" id="steps"></ol>
+                        <ol
+                            class="steps"
+                            id="resultSteps"
+                        ></ol>
+
+                    </div>
+
+
+                    <div class="result-section">
+
+                        <h4>
+                            🔧 Tools / Materials
+                        </h4>
+
+                        <div
+                            class="tools"
+                            id="resultTools"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="result-section">
+
+                        <h4>
+                            📊 Estimate
+                        </h4>
+
+                        <div
+                            class="result-meta"
+                            id="resultMeta"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="result-section full">
+
+                        <h4>
+                            ⚠️ Safety Warning
+                        </h4>
+
+                        <div
+                            class="risk"
+                            id="resultRisk"
+                        ></div>
+
+                    </div>
+
+                </div>
 
             </div>
 
+        </section>
 
-            <div>
 
-                <h3>📊 Repair overview</h3>
+        <!-- SIDEBAR -->
 
-                <div class="info-grid">
+        <aside>
 
-                    <div class="info">
-                        <small>Difficulty</small>
-                        <strong id="difficulty"></strong>
-                    </div>
+            <div class="card">
 
-                    <div class="info">
-                        <small>Estimated time</small>
-                        <strong id="time"></strong>
-                    </div>
+                <div class="card-title">
 
-                    <div class="info">
-                        <small>Estimated cost</small>
-                        <strong id="cost"></strong>
-                    </div>
-
-                    <div class="info">
-                        <small>Risk level</small>
-                        <strong id="risk"></strong>
+                    <div>
+                        <h3>📊 Your Dashboard</h3>
+                        <span>Your repair activity</span>
                     </div>
 
                 </div>
 
 
-                <h3 style="margin-top:25px">
-                    🧰 Tools
-                </h3>
+                <div class="stats">
 
-                <div class="tools" id="tools"></div>
+                    <div class="stat">
+                        <div
+                            class="stat-number"
+                            id="totalRepairs"
+                        >
+                            0
+                        </div>
 
-                <div class="warning" id="warning"></div>
+                        <div class="stat-label">
+                            Problems Analyzed
+                        </div>
+                    </div>
+
+
+                    <div class="stat">
+
+                        <div
+                            class="stat-number"
+                            id="savedCount"
+                        >
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Saved Repairs
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <div>
+                        <h3>💡 Safety First</h3>
+                    </div>
+
+                </div>
+
+                <div class="tip">
+
+                    Always disconnect power before
+                    working on electrical equipment.
+
+                    Never attempt dangerous repairs if
+                    you are not qualified.
+
+                    When in doubt, contact a professional.
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <div>
+                        <h3>🕘 Repair History</h3>
+                    </div>
+
+                    <button
+                        class="clear-button"
+                        id="clearHistory"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+
+                <div id="historyList">
+                    <div class="empty">
+                        No repair history yet.
+                    </div>
+                </div>
+
+            </div>
+
+        </aside>
 
     </div>
-
-</section>
-
-
-<section class="history">
-
-    <div class="history-top">
-
-        <div>
-            <h2>Repair History</h2>
-            <p class="subtitle">
-                Your previous analyses are stored locally on this device.
-            </p>
-        </div>
-
-        <button class="secondary" id="clearHistory">
-            Clear
-        </button>
-
-    </div>
-
-    <div class="history-list" id="historyList"></div>
-
-</section>
 
 </main>
 
 
-<div class="toast" id="toast"></div>
+<footer>
+
+    <p>
+        © <span id="year"></span> FixIt AI.
+        Troubleshoot smarter. Fix safer.
+    </p>
+
+</footer>
 
 
 <script>
 
-/* =========================================================
-   FIXIT AI — CORE APPLICATION
-   ========================================================= */
+    /* =========================================
+       GLOBAL VARIABLES
+    ========================================== */
 
+    let selectedCategory = "other";
 
-const $ = selector => document.querySelector(selector);
+    let uploadedImage = null;
 
+    let repairHistory =
+        JSON.parse(
+            localStorage.getItem("fixitHistory") || "[]"
+        );
 
-/* ================= STATE ================= */
 
-let selectedImage = null;
-let currentAnalysis = null;
+    /* =========================================
+       ELEMENTS
+    ========================================== */
 
-let history = JSON.parse(
-    localStorage.getItem("fixit_history") || "[]"
-);
+    const imageInput =
+        document.getElementById("imageInput");
 
+    const uploadBox =
+        document.getElementById("uploadBox");
 
-/* ================= IMAGE UPLOAD ================= */
+    const imagePreview =
+        document.getElementById("imagePreview");
 
-const imageInput = $("#imageInput");
-const chooseBtn = $("#chooseBtn");
-const dropZone = $("#dropZone");
-const preview = $("#preview");
-const uploadContent = $("#uploadContent");
+    const previewImage =
+        document.getElementById("previewImage");
 
+    const removeImage =
+        document.getElementById("removeImage");
 
-chooseBtn.addEventListener("click", e => {
+    const problemInput =
+        document.getElementById("problem");
 
-    e.stopPropagation();
+    const analyzeButton =
+        document.getElementById("analyzeButton");
 
-    imageInput.click();
+    const loading =
+        document.getElementById("loading");
 
-});
+    const results =
+        document.getElementById("results");
 
+    const themeButton =
+        document.getElementById("themeButton");
 
-dropZone.addEventListener("click", () => {
+    const installButton =
+        document.getElementById("installButton");
 
-    if (!selectedImage) {
-        imageInput.click();
-    }
 
-});
+    /* =========================================
+       YEAR
+    ========================================== */
 
+    document.getElementById("year").textContent =
+        new Date().getFullYear();
 
-imageInput.addEventListener("change", event => {
 
-    const file = event.target.files[0];
+    /* =========================================
+       IMAGE UPLOAD
+    ========================================== */
 
-    if (file) {
-        loadImage(file);
-    }
+    imageInput.addEventListener(
+        "change",
+        function () {
 
-});
+            const file = this.files[0];
 
+            if (!file) {
+                return;
+            }
 
-["dragenter","dragover"].forEach(eventName => {
-
-    dropZone.addEventListener(eventName, event => {
-
-        event.preventDefault();
-
-        dropZone.classList.add("drag");
-
-    });
-
-});
-
-
-["dragleave","drop"].forEach(eventName => {
-
-    dropZone.addEventListener(eventName, event => {
-
-        event.preventDefault();
-
-        dropZone.classList.remove("drag");
-
-    });
-
-});
-
-
-dropZone.addEventListener("drop", event => {
-
-    const file = event.dataTransfer.files[0];
-
-    if (
-        file &&
-        file.type.startsWith("image/")
-    ) {
-        loadImage(file);
-    }
-
-});
-
-
-function loadImage(file){
-
-    if (!file.type.startsWith("image/")){
-
-        showToast("Please upload an image.");
-
-        return;
-    }
-
-    selectedImage = file;
-
-    const reader = new FileReader();
-
-    reader.onload = e => {
-
-        preview.src = e.target.result;
-
-        preview.style.display = "block";
-
-        uploadContent.style.display = "none";
-
-    };
-
-    reader.readAsDataURL(file);
-
-}
-
-
-/* ================= AI ANALYSIS ENGINE ================= */
-
-/*
-    DEMO ANALYZER
-
-    Replace analyzeProblem() with a real
-    computer-vision / LLM API call in production.
-
-    The UI and data structure are already prepared
-    for that integration.
-*/
-
-
-function analyzeProblem(category, description){
-
-    const text = description.toLowerCase();
-
-    let result = {
-
-        title:"General maintenance issue",
-
-        summary:
-        "The available information suggests a troubleshooting inspection is appropriate.",
-
-        difficulty:"Medium",
-
-        time:"30–60 minutes",
-
-        cost:"₹300–₹1,500",
-
-        risk:"Medium",
-
-        tools:[
-            "Screwdriver",
-            "Flashlight",
-            "Cleaning cloth"
-        ],
-
-        warning:
-        "Disconnect power before inspecting electrical components. If you are unsure, stop and contact a qualified professional.",
-
-        steps:[
-
-            "Turn the equipment off and inspect the affected area carefully.",
-
-            "Look for obvious physical damage, loose connections, leaks, overheating or unusual wear.",
-
-            "Check the simplest possible causes before replacing any component.",
-
-            "Test the equipment again only when it is safe to do so.",
-
-            "If the issue remains unresolved, consult a qualified technician."
-        ]
-
-    };
-
-
-    /* ELECTRICAL */
-
-    if(
-        category === "electrical" ||
-        text.includes("fan") ||
-        text.includes("switch") ||
-        text.includes("electric") ||
-        text.includes("socket") ||
-        text.includes("light")
-    ){
-
-        result = {
-
-            title:"Possible electrical fault",
-
-            summary:
-            "The symptoms may be related to a loose connection, damaged component, power issue or another electrical fault.",
-
-            difficulty:"Medium–High",
-
-            time:"30–90 minutes",
-
-            cost:"₹200–₹2,000",
-
-            risk:"High",
-
-            tools:[
-                "Screwdriver",
-                "Flashlight",
-                "Voltage tester"
-            ],
-
-            warning:
-            "⚠️ Electrical work can cause electric shock or fire. Turn off the appropriate power supply before inspection. Do not open live electrical equipment. Use a qualified electrician when required.",
-
-            steps:[
-
-                "Switch off the relevant power supply before touching or opening anything.",
-
-                "Visually inspect the cable, plug, switch and accessible connections for damage.",
-
-                "Look for burning marks, melted plastic, loose wires or unusual heat.",
-
-                "Do not touch exposed conductors or test live circuits unless you are trained and properly equipped.",
-
-                "If the problem persists, have the equipment inspected by a qualified electrician."
-
-            ]
-
-        };
-
-    }
-
-
-    /* PLUMBING */
-
-    else if(
-        category === "plumbing" ||
-        text.includes("leak") ||
-        text.includes("water") ||
-        text.includes("pipe") ||
-        text.includes("tap")
-    ){
-
-        result = {
-
-            title:"Possible plumbing issue",
-
-            summary:
-            "The symptoms may indicate a leak, blockage, worn seal or connection problem.",
-
-            difficulty:"Easy–Medium",
-
-            time:"20–60 minutes",
-
-            cost:"₹100–₹1,500",
-
-            risk:"Medium",
-
-            tools:[
-                "Adjustable wrench",
-                "Plumber's tape",
-                "Bucket",
-                "Cloth"
-            ],
-
-            warning:
-            "Shut off the water supply before opening plumbing connections. If there is significant flooding or structural damage, contact a professional.",
-
-            steps:[
-
-                "Identify exactly where the water is coming from.",
-
-                "Turn off the local water supply if necessary.",
-
-                "Dry the area and inspect joints, seals and visible pipe connections.",
-
-                "Tighten accessible connections carefully without over-tightening.",
-
-                "If the leak continues, replace the damaged seal or contact a plumber."
-
-            ]
-
-        };
-
-    }
-
-
-    /* COMPUTER */
-
-    else if(
-        category === "computer" ||
-        text.includes("computer") ||
-        text.includes("laptop") ||
-        text.includes("screen") ||
-        text.includes("keyboard")
-    ){
-
-        result = {
-
-            title:"Possible computer/electronics issue",
-
-            summary:
-            "The symptoms could be caused by software, power, overheating, connection or hardware problems.",
-
-            difficulty:"Easy–Medium",
-
-            time:"15–60 minutes",
-
-            cost:"₹0–₹3,000",
-
-            risk:"Low–Medium",
-
-            tools:[
-                "Microfiber cloth",
-                "Charger",
-                "USB cable"
-            ],
-
-            warning:
-            "Back up important data before attempting major hardware or operating-system changes. Do not open powered electronics.",
-
-            steps:[
-
-                "Restart the device and check whether the issue repeats.",
-
-                "Check the power source, charger and external connections.",
-
-                "Disconnect unnecessary accessories and test again.",
-
-                "Check for overheating, unusual sounds or physical damage.",
-
-                "If the issue continues, run the manufacturer's diagnostics or contact a technician."
-
-            ]
-
-        };
-
-    }
-
-
-    /* VEHICLE */
-
-    else if(
-        category === "vehicle" ||
-        text.includes("car") ||
-        text.includes("bike") ||
-        text.includes("engine") ||
-        text.includes("brake")
-    ){
-
-        result = {
-
-            title:"Possible vehicle maintenance issue",
-
-            summary:
-            "The reported symptoms require inspection before the vehicle is operated normally.",
-
-            difficulty:"Medium–High",
-
-            time:"30–120 minutes",
-
-            cost:"₹300–₹5,000+",
-
-            risk:"High",
-
-            tools:[
-                "Flashlight",
-                "Basic tool kit",
-                "Tyre pressure gauge"
-            ],
-
-            warning:
-            "Do not drive a vehicle if braking, steering, fuel leakage, severe overheating or another safety-critical system appears faulty. Contact a qualified mechanic.",
-
-            steps:[
-
-                "Park safely and switch the vehicle off.",
-
-                "Inspect the affected area for obvious leaks, damage or loose components.",
-
-                "Check basic indicators such as warning lights, fluid levels and tyre condition when safe.",
-
-                "Do not dismantle safety-critical systems without proper knowledge.",
-
-                "Have the vehicle inspected by a qualified mechanic if the problem remains."
-
-            ]
-
-        };
-
-    }
-
-
-    return result;
-
-}
-
-
-/* ================= ANALYZE ================= */
-
-$("#analyzeBtn").addEventListener("click", async () => {
-
-    const category = $("#category").value;
-
-    const description =
-        $("#description").value.trim();
-
-
-    if(!category){
-
-        showToast("Please select a category.");
-
-        return;
-
-    }
-
-
-    if(description.length < 5){
-
-        showToast("Describe the problem in a little more detail.");
-
-        return;
-
-    }
-
-
-    $("#loading").classList.add("show");
-
-    $("#results").classList.remove("show");
-
-
-    await new Promise(
-        resolve => setTimeout(resolve,1200)
+            handleImage(file);
+        }
     );
 
 
-    currentAnalysis = analyzeProblem(
-        category,
-        description
+    function handleImage(file) {
+
+        if (!file.type.startsWith("image/")) {
+
+            alert(
+                "Please choose a valid image file."
+            );
+
+            return;
+        }
+
+        uploadedImage = file;
+
+        const reader =
+            new FileReader();
+
+        reader.onload = function (event) {
+
+            previewImage.src =
+                event.target.result;
+
+            imagePreview.style.display =
+                "block";
+
+            uploadBox.style.display =
+                "none";
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+
+    removeImage.addEventListener(
+        "click",
+        function () {
+
+            uploadedImage = null;
+
+            imageInput.value = "";
+
+            previewImage.src = "";
+
+            imagePreview.style.display =
+                "none";
+
+            uploadBox.style.display =
+                "block";
+        }
     );
 
 
-    renderAnalysis(
-        currentAnalysis,
-        category,
-        description
-    );
+    /* =========================================
+       DRAG & DROP
+    ========================================== */
 
+    [
+        "dragenter",
+        "dragover"
+    ].forEach(eventName => {
 
-    $("#loading").classList.remove("show");
+        uploadBox.addEventListener(
+            eventName,
+            event => {
 
-    $("#results").classList.add("show");
+                event.preventDefault();
 
-    window.scrollTo({
-        top:$("#results").offsetTop - 80,
-        behavior:"smooth"
+                uploadBox.classList.add(
+                    "dragover"
+                );
+            }
+        );
+
     });
 
-});
+
+    [
+        "dragleave",
+        "drop"
+    ].forEach(eventName => {
+
+        uploadBox.addEventListener(
+            eventName,
+            event => {
+
+                event.preventDefault();
+
+                uploadBox.classList.remove(
+                    "dragover"
+                );
+            }
+        );
+
+    });
 
 
-/* ================= RENDER ================= */
+    uploadBox.addEventListener(
+        "drop",
+        event => {
 
-function renderAnalysis(result,category,description){
+            const file =
+                event.dataTransfer.files[0];
 
-    $("#resultTitle").textContent =
-        result.title;
-
-    $("#resultSummary").textContent =
-        result.summary;
-
-    $("#difficulty").textContent =
-        result.difficulty;
-
-    $("#time").textContent =
-        result.time;
-
-    $("#cost").textContent =
-        result.cost;
-
-    $("#risk").textContent =
-        result.risk;
-
-    $("#warning").textContent =
-        result.warning;
-
-
-    const steps = $("#steps");
-
-    steps.innerHTML = "";
-
-
-    result.steps.forEach(
-        (step,index) => {
-
-            const li =
-                document.createElement("li");
-
-            li.innerHTML = `
-                <span class="step-number">
-                    ${index + 1}
-                </span>
-
-                <span>${escapeHTML(step)}</span>
-            `;
-
-            steps.appendChild(li);
+            if (file) {
+                handleImage(file);
+            }
 
         }
     );
 
 
-    const tools = $("#tools");
+    /* =========================================
+       CATEGORY
+    ========================================== */
 
-    tools.innerHTML = "";
+    document
+        .querySelectorAll(".category")
+        .forEach(button => {
 
+            button.addEventListener(
+                "click",
+                function () {
 
-    result.tools.forEach(tool => {
+                    document
+                        .querySelectorAll(".category")
+                        .forEach(item => {
 
-        const span =
-            document.createElement("span");
+                            item.classList.remove(
+                                "active"
+                            );
 
-        span.className = "tool";
+                        });
 
-        span.textContent = tool;
+                    this.classList.add(
+                        "active"
+                    );
 
-        tools.appendChild(span);
+                    selectedCategory =
+                        this.dataset.category;
+                }
+            );
 
-    });
-
-
-    currentAnalysis = {
-
-        ...result,
-
-        category,
-
-        description,
-
-        createdAt:new Date().toISOString()
-
-    };
-
-}
-
-
-/* ================= SAVE ================= */
-
-$("#saveBtn").addEventListener(
-    "click",
-    saveCurrentRepair
-);
+        });
 
 
-function saveCurrentRepair(){
+    /* Default category */
 
-    if(!currentAnalysis){
-
-        showToast("Nothing to save.");
-
-        return;
-
-    }
+    document
+        .querySelector(
+            '[data-category="other"]'
+        )
+        .classList.add("active");
 
 
-    history.unshift({
+    /* =========================================
+       ANALYSIS ENGINE
+       
+       NOTE:
+       This is a local demo/rule-based engine.
+       It is NOT real AI image analysis.
+    ========================================== */
 
-        id:Date.now(),
-
-        title:currentAnalysis.title,
-
-        category:currentAnalysis.category,
-
-        description:currentAnalysis.description,
-
-        risk:currentAnalysis.risk,
-
-        date:new Date().toLocaleString()
-
-    });
-
-
-    if(history.length > 50){
-
-        history = history.slice(0,50);
-
-    }
-
-
-    localStorage.setItem(
-        "fixit_history",
-        JSON.stringify(history)
+    analyzeButton.addEventListener(
+        "click",
+        analyzeProblem
     );
 
 
-    updateDashboard();
+    function analyzeProblem() {
 
-    renderHistory();
-
-    showToast("Repair saved.");
-
-}
-
-
-/* ================= HISTORY ================= */
-
-function renderHistory(){
-
-    const list = $("#historyList");
-
-    list.innerHTML = "";
+        const problem =
+            problemInput.value
+                .trim()
+                .toLowerCase();
 
 
-    if(history.length === 0){
+        if (!problem && !uploadedImage) {
 
-        list.innerHTML = `
-            <div class="empty">
-                No repairs saved yet.
-            </div>
-        `;
+            alert(
+                "Please describe the problem or upload a photo first."
+            );
 
-        return;
+            return;
+        }
+
+
+        analyzeButton.disabled = true;
+
+        loading.style.display =
+            "block";
+
+        results.style.display =
+            "none";
+
+
+        setTimeout(
+            () => {
+
+                const diagnosis =
+                    generateDiagnosis(
+                        selectedCategory,
+                        problem
+                    );
+
+                displayResult(
+                    diagnosis
+                );
+
+                saveHistory(
+                    diagnosis.title
+                );
+
+                loading.style.display =
+                    "none";
+
+                results.style.display =
+                    "block";
+
+                analyzeButton.disabled =
+                    false;
+
+                results.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+            },
+            1200
+        );
 
     }
 
 
-    history.forEach(item => {
+    function generateDiagnosis(
+        category,
+        problem
+    ) {
 
-        const div =
-            document.createElement("div");
+        let diagnosis = {
 
-        div.className = "history-item";
+            title:
+                "General troubleshooting issue",
 
-        div.innerHTML = `
+            summary:
+                "The information provided suggests that the problem may have a common mechanical, electrical, connection, or maintenance-related cause.",
 
-            <div>
+            steps: [
+                "Turn off or disconnect the equipment before inspecting it.",
+                "Check for visible damage, loose connections, unusual smells, leaks, or overheating.",
+                "Review the manufacturer's instructions for the affected component.",
+                "Test the equipment again after correcting any obvious issue.",
+                "If the problem continues, contact a qualified professional."
+            ],
 
-                <strong>
-                    ${escapeHTML(item.title)}
-                </strong>
+            tools: [
+                "Flashlight",
+                "User manual",
+                "Basic hand tools"
+            ],
 
-                <small>
-                    ${escapeHTML(item.category)}
-                    ·
-                    ${escapeHTML(item.date)}
-                </small>
+            difficulty:
+                "Moderate",
 
+            time:
+                "15–60 min",
+
+            cost:
+                "₹0–₹1,000",
+
+            risk:
+                "Do not continue if you see exposed electrical wiring, smoke, fire, gas leakage, severe overheating, structural damage, or another potentially dangerous condition."
+        };
+
+
+        /* ELECTRICAL */
+
+        if (category === "electrical") {
+
+            diagnosis = {
+
+                title:
+                    "Possible electrical connection or power issue",
+
+                summary:
+                    "The symptoms may be related to a power supply, switch, fuse, loose connection, or overloaded circuit.",
+
+                steps: [
+                    "Switch off the power at the appropriate breaker before inspecting anything.",
+                    "Check whether the appliance or device is receiving power.",
+                    "Inspect the plug, cable, switch, and visible connections for damage.",
+                    "Check the appropriate fuse or breaker if applicable.",
+                    "Restore power only after everything is safely secured.",
+                    "If the problem remains, have a qualified electrician inspect it."
+                ],
+
+                tools: [
+                    "Flashlight",
+                    "Screwdriver",
+                    "Replacement fuse",
+                    "Multimeter"
+                ],
+
+                difficulty:
+                    "Moderate–High",
+
+                time:
+                    "15–45 min",
+
+                cost:
+                    "₹0–₹1,500",
+
+                risk:
+                    "Electrical work can cause shock, burns, fire, or death. Never work on live circuits. If you are not qualified, use a licensed electrician."
+            };
+
+        }
+
+
+        /* PLUMBING */
+
+        else if (category === "plumbing") {
+
+            diagnosis = {
+
+                title:
+                    "Possible leak or blockage",
+
+                summary:
+                    "The symptoms may indicate a blocked pipe, loose fitting, damaged seal, or water-pressure problem.",
+
+                steps: [
+                    "Turn off the water supply if there is an active leak.",
+                    "Dry the affected area so the source can be identified.",
+                    "Inspect visible pipe joints and fittings.",
+                    "Check for a blockage if water is draining slowly.",
+                    "Tighten accessible fittings carefully without over-tightening.",
+                    "If the leak continues or the pipe is damaged, contact a plumber."
+                ],
+
+                tools: [
+                    "Adjustable wrench",
+                    "Bucket",
+                    "Plumber's tape",
+                    "Plunger"
+                ],
+
+                difficulty:
+                    "Easy–Moderate",
+
+                time:
+                    "15–60 min",
+
+                cost:
+                    "₹0–₹1,000",
+
+                risk:
+                    "Turn off the water supply before opening plumbing connections. Hidden leaks can cause structural damage."
+            };
+
+        }
+
+
+        /* APPLIANCE */
+
+        else if (category === "appliance") {
+
+            diagnosis = {
+
+                title:
+                    "Possible appliance power or component issue",
+
+                summary:
+                    "The appliance may have a power, connection, control, filter, or internal component problem.",
+
+                steps: [
+                    "Switch off and unplug the appliance.",
+                    "Check the power cable and plug for visible damage.",
+                    "Look for blocked vents, filters, or moving parts.",
+                    "Clean accessible filters or vents according to the manufacturer's instructions.",
+                    "Reconnect the appliance and test it.",
+                    "If unusual noise, smoke, burning smell, or overheating remains, stop using it and seek professional service."
+                ],
+
+                tools: [
+                    "Flashlight",
+                    "Soft brush",
+                    "Cleaning cloth",
+                    "User manual"
+                ],
+
+                difficulty:
+                    "Easy–Moderate",
+
+                time:
+                    "15–45 min",
+
+                cost:
+                    "₹0–₹2,000",
+
+                risk:
+                    "Never open a mains-powered appliance unless you are qualified to repair it."
+            };
+
+        }
+
+
+        /* VEHICLE */
+
+        else if (category === "vehicle") {
+
+            diagnosis = {
+
+                title:
+                    "Possible vehicle maintenance issue",
+
+                summary:
+                    "The symptoms may be related to battery condition, fluid level, electrical connections, tyres, or routine maintenance.",
+
+                steps: [
+                    "Park the vehicle safely and switch off the engine.",
+                    "Check for visible leaks or damaged components.",
+                    "Inspect the battery terminals for corrosion or loose connections.",
+                    "Check appropriate fluid levels according to the owner's manual.",
+                    "Inspect tyres for obvious damage or low pressure.",
+                    "If warning lights or unusual mechanical symptoms remain, consult a qualified mechanic."
+                ],
+
+                tools: [
+                    "Flashlight",
+                    "Tyre pressure gauge",
+                    "Basic toolkit",
+                    "Vehicle manual"
+                ],
+
+                difficulty:
+                    "Moderate",
+
+                time:
+                    "15–60 min",
+
+                cost:
+                    "₹0–₹3,000",
+
+                risk:
+                    "Never work underneath a vehicle supported only by a jack. Use proper stands and follow the vehicle manufacturer's safety instructions."
+            };
+
+        }
+
+
+        /* COMPUTER */
+
+        else if (category === "computer") {
+
+            diagnosis = {
+
+                title:
+                    "Possible software, power, or connection issue",
+
+                summary:
+                    "The problem may be caused by a software process, peripheral connection, overheating, storage issue, or power problem.",
+
+                steps: [
+                    "Save your work and restart the computer.",
+                    "Disconnect unnecessary USB devices and peripherals.",
+                    "Check available storage space.",
+                    "Install pending operating-system and driver updates.",
+                    "Check whether the computer is overheating or its vents are blocked.",
+                    "If the problem continues, back up important data before deeper troubleshooting."
+                ],
+
+                tools: [
+                    "Compressed air",
+                    "USB keyboard/mouse",
+                    "System diagnostics"
+                ],
+
+                difficulty:
+                    "Easy–Moderate",
+
+                time:
+                    "10–60 min",
+
+                cost:
+                    "₹0–₹2,000",
+
+                risk:
+                    "Back up important files before performing major system changes, disk repairs, or operating-system reinstallation."
+            };
+
+        }
+
+
+        /* FURNITURE */
+
+        else if (category === "furniture") {
+
+            diagnosis = {
+
+                title:
+                    "Possible loose joint or hardware issue",
+
+                summary:
+                    "The furniture may have a loose fastener, worn joint, damaged fitting, or alignment problem.",
+
+                steps: [
+                    "Inspect the furniture for loose screws, bolts, or joints.",
+                    "Tighten accessible hardware carefully.",
+                    "Check whether the frame is aligned correctly.",
+                    "Replace visibly damaged hardware with an appropriate size.",
+                    "Test the furniture carefully before normal use."
+                ],
+
+                tools: [
+                    "Screwdriver",
+                    "Allen key",
+                    "Wrench",
+                    "Wood glue"
+                ],
+
+                difficulty:
+                    "Easy",
+
+                time:
+                    "15–45 min",
+
+                cost:
+                    "₹0–₹800",
+
+                risk:
+                    "Do not use furniture that is structurally unstable or carrying significant weight until properly repaired."
+            };
+
+        }
+
+
+        /* KEYWORD OVERRIDES */
+
+        if (
+            problem.includes("smoke") ||
+            problem.includes("burning") ||
+            problem.includes("fire")
+        ) {
+
+            diagnosis.risk =
+                "STOP USING THE DEVICE IMMEDIATELY. Disconnect power only if it is safe to do so. For fire, smoke, or severe overheating, move away from the danger and contact emergency/professional services.";
+
+        }
+
+
+        if (
+            problem.includes("leak") ||
+            problem.includes("water")
+        ) {
+
+            if (category === "plumbing") {
+
+                diagnosis.title =
+                    "Possible water leak or plumbing blockage";
+
+            }
+
+        }
+
+
+        return diagnosis;
+
+    }
+
+
+    /* =========================================
+       DISPLAY RESULT
+    ========================================== */
+
+    function displayResult(diagnosis) {
+
+        document.getElementById(
+            "resultTitle"
+        ).textContent =
+            diagnosis.title;
+
+
+        document.getElementById(
+            "resultSummary"
+        ).textContent =
+            diagnosis.summary;
+
+
+        const steps =
+            document.getElementById(
+                "resultSteps"
+            );
+
+        steps.innerHTML = "";
+
+
+        diagnosis.steps.forEach(
+            step => {
+
+                const li =
+                    document.createElement(
+                        "li"
+                    );
+
+                li.textContent =
+                    step;
+
+                steps.appendChild(li);
+            }
+        );
+
+
+        const tools =
+            document.getElementById(
+                "resultTools"
+            );
+
+        tools.innerHTML = "";
+
+
+        diagnosis.tools.forEach(
+            tool => {
+
+                const span =
+                    document.createElement(
+                        "span"
+                    );
+
+                span.className =
+                    "tool";
+
+                span.textContent =
+                    tool;
+
+                tools.appendChild(span);
+
+            }
+        );
+
+
+        document.getElementById(
+            "resultMeta"
+        ).innerHTML = `
+
+            <div class="meta-item">
+                <small>Difficulty</small>
+                <strong>${diagnosis.difficulty}</strong>
             </div>
 
-            <span class="badge ${
-                item.risk === "High"
-                    ? "red"
-                    : item.risk === "Medium"
-                    ? "yellow"
-                    : "green"
-            }">
+            <div class="meta-item">
+                <small>Estimated Time</small>
+                <strong>${diagnosis.time}</strong>
+            </div>
 
-                ${escapeHTML(item.risk)}
-
-            </span>
+            <div class="meta-item">
+                <small>Estimated Cost</small>
+                <strong>${diagnosis.cost}</strong>
+            </div>
 
         `;
 
-        list.appendChild(div);
 
-    });
+        document.getElementById(
+            "resultRisk"
+        ).textContent =
+            diagnosis.risk;
 
-}
+    }
 
 
-/* ================= DASHBOARD ================= */
+    /* =========================================
+       HISTORY
+    ========================================== */
 
-function updateDashboard(){
+    function saveHistory(title) {
 
-    $("#totalRepairs").textContent =
-        history.length;
+        const item = {
 
-    $("#savedRepairs").textContent =
-        history.length;
+            title: title,
 
-    const unique =
-        new Set(
-            history.map(
-                x => x.category
+            category:
+                selectedCategory,
+
+            date:
+                new Date().toLocaleString()
+
+        };
+
+
+        repairHistory.unshift(item);
+
+
+        repairHistory =
+            repairHistory.slice(0, 20);
+
+
+        localStorage.setItem(
+            "fixitHistory",
+            JSON.stringify(
+                repairHistory
             )
         );
 
-    $("#categories").textContent =
-        unique.size;
-
-}
-
-
-/* ================= DARK MODE ================= */
-
-$("#darkBtn").addEventListener(
-    "click",
-    () => {
-
-        document.body.classList.toggle("dark");
-
-        const dark =
-            document.body.classList.contains("dark");
-
-        localStorage.setItem(
-            "fixit_dark",
-            dark ? "1" : "0"
-        );
-
-        $("#darkBtn").textContent =
-            dark ? "☀️" : "🌙";
-
-    }
-);
-
-
-if(
-    localStorage.getItem("fixit_dark") === "1"
-){
-
-    document.body.classList.add("dark");
-
-    $("#darkBtn").textContent = "☀️";
-
-}
-
-
-/* ================= CLEAR HISTORY ================= */
-
-$("#clearHistory").addEventListener(
-    "click",
-    () => {
-
-        if(history.length === 0){
-
-            showToast("History is already empty.");
-
-            return;
-
-        }
-
-
-        const confirmed =
-            confirm(
-                "Delete all saved repair history?"
-            );
-
-
-        if(!confirmed) return;
-
-
-        history = [];
-
-        localStorage.removeItem(
-            "fixit_history"
-        );
 
         updateDashboard();
 
-        renderHistory();
-
-        showToast("History cleared.");
-
     }
-);
 
 
-/* ================= TOAST ================= */
+    function updateDashboard() {
 
-let toastTimer;
-
-function showToast(message){
-
-    const toast = $("#toast");
-
-    toast.textContent = message;
-
-    toast.classList.add("show");
-
-    clearTimeout(toastTimer);
-
-    toastTimer = setTimeout(
-        () => toast.classList.remove("show"),
-        2500
-    );
-
-}
+        document.getElementById(
+            "totalRepairs"
+        ).textContent =
+            repairHistory.length;
 
 
-/* ================= SECURITY ================= */
-
-function escapeHTML(value){
-
-    return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
-}
+        document.getElementById(
+            "savedCount"
+        ).textContent =
+            repairHistory.length;
 
 
-/* ================= START ================= */
+        const historyList =
+            document.getElementById(
+                "historyList"
+            );
 
-updateDashboard();
 
-renderHistory();
+        if (repairHistory.length === 0) {
 
-</script>
+            historyList.innerHTML =
+                `<div class="empty">
+                    No repair history yet.
+                </div>`;
 
-</body>
-</html>
-/* =========================
-   SERVICE WORKER
-   ========================= */
+            return;
+        }
 
-if ("serviceWorker" in navigator) {
 
-    window.addEventListener("load", () => {
+        historyList.innerHTML = "";
 
-        navigator.serviceWorker
-            .register("./service-worker.js")
-            .then(registration => {
 
-                console.log(
-                    "FixIt AI service worker registered:",
-                    registration.scope
-                );
+        repairHistory
+            .slice(0, 8)
+            .forEach(item => {
 
-            })
-            .catch(error => {
+                const div =
+                    document.createElement(
+                        "div"
+                    );
 
-                console.error(
-                    "FixIt AI service worker registration failed:",
-                    error
-                );
+                div.className =
+                    "history-item";
+
+                div.innerHTML = `
+
+                    <strong>
+                        ${escapeHTML(item.title)}
+                    </strong>
+
+                    <span>
+                        ${escapeHTML(item.category)}
+                        •
+                        ${escapeHTML(item.date)}
+                    </span>
+
+                `;
+
+                historyList.appendChild(div);
 
             });
 
-    });
+    }
 
-}
+
+    function escapeHTML(text) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+
+    document.getElementById(
+        "clearHistory"
+    ).addEventListener(
+        "click",
+        function () {
+
+            if (
+                !confirm(
+                    "Clear all repair history?"
+                )
+            ) {
+                return;
+            }
+
+            repairHistory = [];
+
+            localStorage.removeItem(
+                "fixitHistory"
+            );
+
+            updateDashboard();
+
+        }
+    );
+
+
+    /* =========================================
+       DARK MODE
+    ========================================== */
+
+    const savedTheme =
+        localStorage.getItem(
+            "fixitTheme"
+        );
+
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark"
+        );
+
+        themeButton.textContent =
+            "☀️";
+
+    }
+
+
+    themeButton.addEventListener(
+        "click",
+        function () {
+
+            document.body.classList.toggle(
+                "dark"
+            );
+
+            const dark =
+                document.body.classList.contains(
+                    "dark"
+                );
+
+
+            localStorage.setItem(
+                "fixitTheme",
+                dark
+                    ? "dark"
+                    : "light"
+            );
+
+
+            themeButton.textContent =
+                dark
+                    ? "☀️"
+                    : "🌙";
+
+        }
+    );
+
+
+    /* =========================================
+       PWA INSTALL PROMPT
+    ========================================== */
+
+    let deferredPrompt = null;
+
+
+    window.addEventListener(
+        "beforeinstallprompt",
+        event => {
+
+            event.preventDefault();
+
+            deferredPrompt =
+                event;
+
+            installButton.style.display =
+                "grid";
+
+        }
+    );
+
+
+    installButton.addEventListener(
+        "click",
+        async function () {
+
+            if (!deferredPrompt) {
+                return;
+            }
+
+            deferredPrompt.prompt();
+
+            await deferredPrompt.userChoice;
+
+            deferredPrompt =
+                null;
+
+            installButton.style.display =
+                "none";
+
+        }
+    );
+
+
+    window.addEventListener(
+        "appinstalled",
+        () => {
+
+            installButton.style.display =
+                "none";
+
+            deferredPrompt =
+                null;
+
+        }
+    );
+
+
+    /* =========================================
+       SERVICE WORKER
+    ========================================== */
+
+    if (
+        "serviceWorker" in navigator
+    ) {
+
+        window.addEventListener(
+            "load",
+            () => {
+
+                navigator.serviceWorker
+                    .register(
+                        "./service-worker.js"
+                    )
+                    .then(
+                        registration => {
+
+                            console.log(
+                                "FixIt AI service worker registered:",
+                                registration.scope
+                            );
+
+                        }
+                    )
+                    .catch(
+                        error => {
+
+                            console.error(
+                                "FixIt AI service worker registration failed:",
+                                error
+                            );
+
+                        }
+                    );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================
+       INITIALIZE
+    ========================================== */
+
+    updateDashboard();
 
 </script>
 
 </body>
 </html>
+```
