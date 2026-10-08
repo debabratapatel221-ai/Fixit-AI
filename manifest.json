@@ -2,33 +2,20 @@
   "name": "FixIt AI",
   "short_name": "FixIt AI",
   "description": "AI-powered troubleshooting assistant that helps identify problems, explain possible causes, and provide safe step-by-step repair guidance.",
-
   "id": "/Fixit-AI/",
   "start_url": "/Fixit-AI/",
   "scope": "/Fixit-AI/",
-
   "display": "standalone",
-  "display_override": [
-    "window-controls-overlay",
-    "standalone"
-  ],
-
   "background_color": "#f4f7fb",
   "theme_color": "#5b5bd6",
-
   "orientation": "portrait-primary",
-
   "lang": "en",
   "dir": "ltr",
-
   "categories": [
     "utilities",
     "productivity",
     "lifestyle"
   ],
-
-  "prefer_related_applications": false,
-
   "icons": [
     {
       "src": "/Fixit-AI/icon-192.png",
